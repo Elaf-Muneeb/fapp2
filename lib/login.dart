@@ -1,5 +1,7 @@
+import 'package:HeartDisease/controllers/patient_controller.dart';
 import 'package:HeartDisease/patient.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -8,8 +10,13 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+
+  final PatientController _controller = Get.put(PatientController());
+
+
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(appBar: AppBar(
@@ -37,16 +44,18 @@ class _LoginState extends State<Login> {
             const SizedBox(height: 20.0),
             ElevatedButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const PatientPage()),
-                );
+
                 // Handle login button press
-                String email = _emailController.text;
-                String password = _passwordController.text;
+                String email = _emailController.text.trim();
+                String password = _passwordController.text.trim();
                 // Here you can add login logic
                 print('Email: $email');
                 print('Password: $password');
+
+                _controller.signInUser(email, password);
+
+
+
               },
               child: Text('Login'),
             ),

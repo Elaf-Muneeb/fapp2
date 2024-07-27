@@ -1,7 +1,11 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:HeartDisease/utlis.dart';
+import 'package:get/get.dart';
+import 'controllers/patient_controller.dart';
+import 'utlis.dart';
 
 class PatientPage extends StatefulWidget {
   const PatientPage({super.key});
@@ -12,13 +16,34 @@ class PatientPage extends StatefulWidget {
 
 class _PatientPageState extends State<PatientPage> {
   Uint8List? _image;
-  String? selectedValue;
+  String? selectedGender;
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _ageController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  final PatientController _patientController = Get.put(PatientController());
 
   void selectImage() async {
     Uint8List img = await pickImage(ImageSource.gallery);
     setState(() {
       _image = img;
     });
+  }
+
+  void saveProfile() {
+    _patientController.registerUser(
+      name: _nameController.text,
+      age: _ageController.text,
+      address: _addressController.text,
+      phone: _phoneController.text,
+      email: _emailController.text,
+      password: _passwordController.text,
+      gender: selectedGender!,
+      image: _image,
+    );
   }
 
   @override
@@ -28,25 +53,25 @@ class _PatientPageState extends State<PatientPage> {
         title: const Text('Patient'),
       ),
       body: Center(
-      child: SingleChildScrollView(
-          child : Column(
+        child: SingleChildScrollView(
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Stack(
                 children: [
                   _image != null
                       ? CircleAvatar(
-                          radius: 64,
-                          backgroundImage: MemoryImage(_image!),
-                        )
+                    radius: 64,
+                    backgroundImage: MemoryImage(_image!),
+                  )
                       : const SizedBox(
-                          height: 200,
-                          child: CircleAvatar(
-                            radius: 65,
-                            backgroundImage: NetworkImage(
-                                'https://www.google.com/imgres?imgurl=https%3A%2F%2Fstatic.vecteezy.com%2Fsystem%2Fresources%2Fpreviews%2F013%2F042%2F571%2Foriginal%2Fdefault-avatar-profile-icon-social-media-user-photo-in-flat-style-vector.jpg&tbnid=VVinhj0hmixU0M&vet=12ahUKEwij0NvNhPSFAxUaTaQEHa34DpMQMygEegQIARBb..i&imgrefurl=https%3A%2F%2Fwww.vecteezy.com%2Fvector-art%2F13042571-default-avatar-profile-icon-vector-social-media-user-photo-in-flat-style&docid=zPHZrLkhzPRhiM&w=1920&h=1920&q=default%20user%20profile&hl=en&ved=2ahUKEwij0NvNhPSFAxUaTaQEHa34DpMQMygEegQIARBb'),
-                          ),
-                        ),
+                    height: 200,
+                    child: CircleAvatar(
+                      radius: 65,
+                      backgroundImage: NetworkImage(
+                          'https://www.google.com/imgres?imgurl=https%3A%2F%2Fstatic.vecteezy.com%2Fsystem%2Fresources%2Fpreviews%2F013%2F042%2F571%2Foriginal%2Fdefault-avatar-profile-icon-social-media-user-photo-in-flat-style-vector.jpg&tbnid=VVinhj0hmixU0M&vet=12ahUKEwij0NvNhPSFAxUaTaQEHa34DpMQMygEegQIARBb..i&imgrefurl=https%3A%2F%2Fwww.vecteezy.com%2Fvector-art%2F13042571-default-avatar-profile-icon-vector-social-media-user-photo-in-flat-style&docid=zPHZrLkhzPRhiM&w=1920&h=1920&q=default%20user%20profile&hl=en&ved=2ahUKEwij0NvNhPSFAxUaTaQEHa34DpMQMygEegQIARBb'),
+                    ),
+                  ),
                   Positioned(
                     bottom: 28,
                     left: 88,
@@ -58,10 +83,11 @@ class _PatientPageState extends State<PatientPage> {
                 ],
               ),
               const SizedBox(height: 30.5),
-              const SizedBox(
+              SizedBox(
                 width: 800,
                 child: TextField(
-                  decoration: InputDecoration(
+                  controller: _nameController,
+                  decoration: const InputDecoration(
                     labelText: 'Enter Name',
                     contentPadding: EdgeInsets.all(10),
                     border: OutlineInputBorder(
@@ -74,10 +100,11 @@ class _PatientPageState extends State<PatientPage> {
                 ),
               ),
               const SizedBox(height: 30.5),
-              const SizedBox(
+              SizedBox(
                 width: 800,
                 child: TextField(
-                  decoration: InputDecoration(
+                  controller: _ageController,
+                  decoration: const InputDecoration(
                     labelText: 'Age',
                     contentPadding: EdgeInsets.all(10),
                     border: OutlineInputBorder(
@@ -93,11 +120,11 @@ class _PatientPageState extends State<PatientPage> {
               SizedBox(
                 width: 800,
                 child: DropdownButtonFormField<String>(
-                  hint : const Text('Gender'),
-                  value: selectedValue,
+                  hint: const Text('Gender'),
+                  value: selectedGender,
                   onChanged: (String? newValue) {
                     setState(() {
-                      selectedValue = newValue!;
+                      selectedGender = newValue!;
                     });
                   },
                   items: <String>['Male', 'Female']
@@ -119,10 +146,11 @@ class _PatientPageState extends State<PatientPage> {
                 ),
               ),
               const SizedBox(height: 30.5),
-              const SizedBox(
+              SizedBox(
                 width: 800,
                 child: TextField(
-                  decoration: InputDecoration(
+                  controller: _addressController,
+                  decoration: const InputDecoration(
                     labelText: 'Address',
                     contentPadding: EdgeInsets.all(10),
                     border: OutlineInputBorder(
@@ -135,10 +163,11 @@ class _PatientPageState extends State<PatientPage> {
                 ),
               ),
               const SizedBox(height: 30.5),
-              const SizedBox(
+              SizedBox(
                 width: 800,
                 child: TextField(
-                  decoration: InputDecoration(
+                  controller: _phoneController,
+                  decoration: const InputDecoration(
                     labelText: 'Phone Number',
                     contentPadding: EdgeInsets.all(10),
                     border: OutlineInputBorder(
@@ -150,16 +179,43 @@ class _PatientPageState extends State<PatientPage> {
                   ),
                 ),
               ),
-
-
-
-
-
+              const SizedBox(height: 30.5),
+              SizedBox(
+                width: 800,
+                child: TextField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(
+                    labelText: 'Email',
+                    contentPadding: EdgeInsets.all(10),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.black,
+                        width: 2.5,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 30.5),
+              SizedBox(
+                width: 800,
+                child: TextField(
+                  controller: _passwordController,
+                  decoration: const InputDecoration(
+                    labelText: 'Password',
+                    contentPadding: EdgeInsets.all(10),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.black,
+                        width: 2.5,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
               const SizedBox(height: 30.5),
               ElevatedButton(
-                onPressed: () {
-                  // Navigate to the signup page
-                },
+                onPressed: saveProfile,
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
                       horizontal: 20, vertical: 10), // Adjust padding as needed
@@ -168,8 +224,8 @@ class _PatientPageState extends State<PatientPage> {
               ),
             ],
           ),
+        ),
       ),
-    ),
     );
   }
 }

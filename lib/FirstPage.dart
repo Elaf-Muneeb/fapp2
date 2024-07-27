@@ -224,11 +224,6 @@
 //   }
 // }
 
-
-
-
-
-
 import 'package:HeartDisease/doctor_dashboard.dart';
 import 'package:HeartDisease/patient.dart';
 import 'package:HeartDisease/patient_dashboard.dart';
@@ -371,7 +366,7 @@ class FirstPageFormState extends State<FirstPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const SecondPage()),
+                                builder: (context) => const PatientPage()),
                           );
                         },
                         child: const Text(
