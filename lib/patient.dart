@@ -88,7 +88,7 @@ class _PatientPageState extends State<PatientPage> {
                 child: TextField(
                   controller: _nameController,
                   decoration: const InputDecoration(
-                    labelText: 'Enter Name',
+                    labelText: 'Name',
                     contentPadding: EdgeInsets.all(10),
                     border: OutlineInputBorder(
                       borderSide: BorderSide(

@@ -1,7 +1,10 @@
 
 import 'package:HeartDisease/FirstPage.dart';
+import 'package:HeartDisease/login_doctor.dart';
 import 'package:HeartDisease/patient.dart';
 import 'package:flutter/material.dart';
+
+import 'login.dart';
 
 class StartPage extends StatefulWidget {
   const StartPage({super.key});
@@ -29,12 +32,12 @@ class _StartPageState extends State<StartPage> {
                 const SizedBox(height: 50),
                 _buildButton('assets/doctor.png', 'Doctor', () {
                   // Handle Doctor button press
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=> const FirstPage()),
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=> const LoginDoctor()),
                                     );
                 }),
                 const SizedBox(height: 40),
                 _buildButton('assets/patient.png', 'Patient', () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=> const FirstPage()),
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=> const LoginPatient()),
                   );
                   // Handle Patient button press
                 }),
