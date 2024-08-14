@@ -14,45 +14,56 @@ class PDashboard extends StatefulWidget {
 }
 
 class _PatientDashboardState extends State<PDashboard> {
-  final PatientController _patientcontroller = Get.find<PatientController>();
+  final PatientController _patientController = Get.find<PatientController>();
   //final AppointmentController _appointmentController = Get.put(AppointmentController());
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('Is Loading: ${_patientcontroller.isLoading.value}');
-    debugPrint('Patient Data: ${_patientcontroller.patientData}');
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Patient Dashboard'),
       ),
       body: Obx(() {
-        if (_patientcontroller.isLoading.value) {
+        if (_patientController.isLoading.value) {
           return const Center(child: CircularProgressIndicator());
         }
-        if (_patientcontroller.patientData.isEmpty) {
+        if (_patientController.patientData.isEmpty) {
           return const Center(child: Text('No data available'));
         }
         return SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
-              //crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 20),
                 Text(
-                  'Name: ${_patientcontroller.patientData['name']}',
+                  'Name: ${_patientController.patientData['name']}',
                   style: const TextStyle(fontSize: 18),
                 ),
                 const SizedBox(height: 30),
                 Text(
-                  'Age: ${_patientcontroller.patientData['age']}',
+                  'Age: ${_patientController.patientData['age']}',
                   style: const TextStyle(fontSize: 18),
                 ),
                 const SizedBox(height: 40),
                 Text(
-                  'Gender: ${_patientcontroller.patientData['gender']}',
+                  'Gender: ${_patientController.patientData['gender']}',
                   style: const TextStyle(fontSize: 18),
+                ),
+                SizedBox(
+                  width: 90,
+                  height: 40,
+                  child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const StartPage()),
+                        );
+                      },
+                    child: const Text("Home"),
+                  ),
                 ),
               ],
             ),
@@ -86,19 +97,7 @@ class _PatientDashboardState extends State<PDashboard> {
           //   ],
           // ),
           //
-          // SizedBox(
-          //   height: 1500,
-          //   child: ElevatedButton(
-          //       onPressed: () {
-          //         Navigator.push(
-          //           context,
-          //           MaterialPageRoute(
-          //               builder: (context) => const StartPage()),
-          //         );
-          //       },
-          //     child: const Text("Home"),
-          //   ),
-          // ),
+
           // ],
         );
       }),

@@ -24,7 +24,7 @@ class _PatientPageState extends State<PatientPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  final PatientController _patientController = Get.put(PatientController());
+  final PatientController _patientController = Get.find<PatientController>();
 
   void selectImage() async {
     Uint8List img = await pickImage(ImageSource.gallery);

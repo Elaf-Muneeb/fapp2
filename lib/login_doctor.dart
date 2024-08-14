@@ -166,15 +166,16 @@
 //
 //
 
-import 'package:HeartDisease/controllers/patient_controller.dart';
+
 import 'package:HeartDisease/doctor_dashboard.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:HeartDisease/doctor.dart'; // Import the doctor page
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:HeartDisease/controllers/doctor_controller.dart';
 import 'package:get/get.dart';
+
+import 'Doctor.dart';
 
 class LoginDoctor extends StatefulWidget {
   const LoginDoctor({super.key});
@@ -188,7 +189,7 @@ class _LoginDoctorState extends State<LoginDoctor> {
   final TextEditingController _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
 
-  final PatientController _doctorController = Get.put(PatientController());
+  final DoctorController _doctorController = Get.put(DoctorController());
 
   void _signIn() async {
     try {
@@ -209,7 +210,7 @@ class _LoginDoctorState extends State<LoginDoctor> {
       );
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const DoctorDashboard()),
+        MaterialPageRoute(builder: (context) =>const DoctorDashboard()),
       );
     } catch (e) {
       // If there's an error, display it in a toast
@@ -342,3 +343,4 @@ class _LoginDoctorState extends State<LoginDoctor> {
     );
   }
 }
+

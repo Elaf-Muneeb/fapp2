@@ -77,89 +77,41 @@ class PatientController extends GetxController {
     }
   }
 
-  Future<void> registerDoctorUser({
-    required String name,
-    required String phone,
-    required String specialization,
-    required String email,
-    required String password,
-    required String gender,
-    Uint8List? image,
-  }) async {
-    try {
-      UserCredential userCredential = await _auth
-          .createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-
-      String imageUrl = '';
-
-      if (image != null) {
-        String uid = userCredential.user!.uid;
-        UploadTask uploadTask = _storage
-            .ref()
-            .child('profileImages')
-            .child(uid)
-            .putData(image);
-
-        TaskSnapshot snap = await uploadTask;
-        imageUrl = await snap.ref.getDownloadURL();
-      }
-
-      await _firestore.collection('doctors').doc(userCredential.user!.uid).set({
-        'name': name,
-        'phone': phone,
-        'specialization': specialization,
-        'email': email,
-        'gender': gender,
-        'imageUrl': imageUrl,
-      });
-
-      Get.snackbar('Success', 'Doctor registered successfully!');
-    } catch (e) {
-      Get.snackbar('Error', e.toString());
-    }
-  }
-
-
-  Future<void> fetchDoctorData() async {
-    try {
-      isLoading(true);
-      debugPrint("Fetching patient data...");
-
-      User? user = FirebaseAuth.instance.currentUser;
-      if (user != null) {
-        DocumentSnapshot<Map<String, dynamic>> doc =
-        await FirebaseFirestore.instance.collection('doctors').doc(user.uid).get();
-
-        if (doc.exists && doc.data() != null) {
-          doctorData.value = doc.data()!;
-        } else {
-          debugPrint("No doctors data found for the user.");
-          Get.snackbar('Error', 'No doctors data found.');
-        }
-      } else {
-        debugPrint("No authenticated user found.");
-        Get.snackbar('Error', 'User not authenticated.');
-      }
-    } catch (e) {
-      debugPrint("Error fetching doctors data: $e");
-      Get.snackbar('Error', e.toString());
-    } finally {
-      isLoading(false);
-    }
-  }
+  // Future<void> fetchPatientData() async {
+  //   try {
+  //     isLoading(true);
+  //     debugPrint("Fetching patient data...");
+  //
+  //     User? user = FirebaseAuth.instance.currentUser;
+  //     if (user != null) {
+  //       DocumentSnapshot<Map<String, dynamic>> doc =
+  //       await FirebaseFirestore.instance.collection('patients').doc(user.uid).get();
+  //
+  //       if (doc.exists && doc.data() != null) {
+  //         patientData.value = doc.data()!;
+  //       } else {
+  //         debugPrint("No patient data found for the user.");
+  //         Get.snackbar('Error', 'No patient data found.');
+  //       }
+  //     } else {
+  //       debugPrint("No authenticated user found.");
+  //       Get.snackbar('Error', 'User not authenticated.');
+  //     }
+  //   } catch (e) {
+  //     debugPrint("Error fetching patient data: $e");
+  //     Get.snackbar('Error', e.toString());
+  //   }
+  // }
 
   Future<void> fetchPatientData() async {
     try {
-      isLoading(true);
+      isLoading(true);  // Show loading indicator while fetching data
       debugPrint("Fetching patient data...");
 
-      User? user = FirebaseAuth.instance.currentUser;
+      User? user = _auth.currentUser;
       if (user != null) {
         DocumentSnapshot<Map<String, dynamic>> doc =
-        await FirebaseFirestore.instance.collection('patients').doc(user.uid).get();
+        await _firestore.collection('patients').doc(user.uid).get();
 
         if (doc.exists && doc.data() != null) {
           patientData.value = doc.data()!;
@@ -175,9 +127,10 @@ class PatientController extends GetxController {
       debugPrint("Error fetching patient data: $e");
       Get.snackbar('Error', e.toString());
     } finally {
-      isLoading(false);
+      isLoading(false);  // Stop loading indicator after data fetch
     }
   }
+
 
 
   Future<void> signInUser(String email, String password) async {
@@ -185,12 +138,16 @@ class PatientController extends GetxController {
       await _loginauth.signInWithEmailAndPassword(
           email: email, password: password);
       Get.snackbar('Success', 'User signed in successfully!');
+      // Fetch patient data after signing in
+      await fetchPatientData();
       Get.offAll(() => const PDashboard());
     } catch (e) {
       Get.snackbar('Error', e.toString());
     }
   }
 }
+
+
 // Future<void> fetchPatientData() async {
 //   try {
 //     isLoading(true);

@@ -18,76 +18,41 @@ class LoginPatient extends StatefulWidget {
 
 class loginpatient extends State<LoginPatient> {
   final _formKey = GlobalKey<FormState>();
+
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
+  final PatientController _patientController = Get.put(PatientController());
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  // void _signIn() async {
-  //   await _auth
-  //       .signInWithEmailAndPassword(
-  //       email: _emailController.text.toString(),
-  //       password: _passwordController.text.toString())
-  //       .then((value) {
-  //     Fluttertoast.showToast(
-  //         msg: value.user!.email.toString(),
-  //         toastLength: Toast.LENGTH_SHORT,
-  //         gravity: ToastGravity.BOTTOM,
-  //         timeInSecForIosWeb: 2,
-  //         backgroundColor: Colors.green,
-  //         textColor: Colors.white,
-  //         fontSize: 16.0);
-  //     Navigator.push(
-  //       context,
-  //       MaterialPageRoute(builder: (context) => const PDashboard()),
-  //     );
-  //   }).onError((error, stackTrace) {
-  //     debugPrint(error.toString());
-  //     Fluttertoast.showToast(
-  //         msg: "Error: ${error.toString()}",
-  //         toastLength: Toast.LENGTH_SHORT,
-  //         gravity: ToastGravity.BOTTOM,
-  //         timeInSecForIosWeb: 2,
-  //         backgroundColor: Colors.red,
-  //         textColor: Colors.white,
-  //         fontSize: 16.0);
-  //   });
-  // }
-  final PatientController _doctorController = Get.put(PatientController());
-
   void _signIn() async {
-    try {
-      await _doctorController.signInUser(
-        _emailController.text.trim(),
-        _passwordController.text.trim(),
-      );
-
-      // If sign-in is successful, display a toast with the user's email
+    await _auth
+        .signInWithEmailAndPassword(
+        email: _emailController.text.toString(),
+        password: _passwordController.text.toString())
+        .then((value) {
       Fluttertoast.showToast(
-        msg: FirebaseAuth.instance.currentUser?.email ?? '',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 2,
-        backgroundColor: Colors.green,
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
+          msg: value.user!.email.toString(),
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0);
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const PDashboard()),
       );
-    } catch (e) {
-      // If there's an error, display it in a toast
+    }).onError((error, stackTrace) {
+      debugPrint(error.toString());
       Fluttertoast.showToast(
-        msg: "Error: ${e.toString()}",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 2,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
-    }
+          msg: "Error: ${error.toString()}",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    });
   }
 
   void _validateAndNavigate() {

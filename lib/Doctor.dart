@@ -1,6 +1,4 @@
-
 import 'dart:typed_data';
-import 'package:HeartDisease/controllers/patient_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:get/get.dart';
@@ -23,7 +21,7 @@ class DoctorPageState extends State<DoctorPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  final PatientController _doctorController = Get.put(PatientController());
+  final DoctorController _doctorController = Get.put(DoctorController());
 
   void selectImage() async {
     Uint8List img = await pickImage(ImageSource.gallery);
@@ -38,12 +36,12 @@ class DoctorPageState extends State<DoctorPage> {
       return;
     }
 
-    _doctorController.registerDoctorUser(
-      name: _nameController.text,
-      phone: _phoneController.text,
+    _doctorController.registerUser(
+      name: _nameController.text.trim(),
+      phone: _phoneController.text.trim(),
       specialization: selectedSpecialization!,
-      email: _emailController.text,
-      password: _passwordController.text,
+      email: _emailController.text.trim(),
+      password: _passwordController.text.trim(),
       gender: selectedGender!,
       image: _image,
     );
@@ -64,18 +62,18 @@ class DoctorPageState extends State<DoctorPage> {
                 children: [
                   _image != null
                       ? CircleAvatar(
-                    radius: 64,
-                    backgroundImage: MemoryImage(_image!),
-                  )
+                          radius: 64,
+                          backgroundImage: MemoryImage(_image!),
+                        )
                       : const SizedBox(
-                    height: 200,
-                    child: CircleAvatar(
-                      radius: 65,
-                      backgroundImage: NetworkImage(
-                        'https://www.example.com/default-profile-image.jpg',
-                      ),
-                    ),
-                  ),
+                          height: 200,
+                          child: CircleAvatar(
+                            radius: 65,
+                            backgroundImage: NetworkImage(
+                              'https://www.example.com/default-profile-image.jpg',
+                            ),
+                          ),
+                        ),
                   Positioned(
                     bottom: 28,
                     left: 88,
@@ -225,8 +223,8 @@ class DoctorPageState extends State<DoctorPage> {
               ElevatedButton(
                 onPressed: saveProfile,
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 20, vertical: 10),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 ),
                 child: const Text('Save Profile'),
               ),
